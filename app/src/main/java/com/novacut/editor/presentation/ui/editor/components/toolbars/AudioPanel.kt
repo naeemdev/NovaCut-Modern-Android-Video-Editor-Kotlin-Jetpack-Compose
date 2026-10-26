@@ -92,6 +92,7 @@ fun AudioPanel(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
                         .background(StudioSurfaceElevated)
+                        .clickable { onAddAudio(audio) }
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
