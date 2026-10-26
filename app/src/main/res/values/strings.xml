@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NovaCut</string>
+    <string name="app_subname">Pro Video Studio &amp; Editor</string>
+    <string name="new_project">New Project</string>
+    <string name="recent_projects">Recent Projects</string>
+    <string name="export">Export</string>
+    <string name="saving_video">Rendering video…</string>
+    <string name="video_saved">Video exported successfully!</string>
+</resources>
