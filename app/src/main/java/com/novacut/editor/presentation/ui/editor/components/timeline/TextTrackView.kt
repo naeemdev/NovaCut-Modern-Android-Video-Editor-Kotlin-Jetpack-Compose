@@ -84,18 +84,6 @@ fun TextTrackView(
                         color = if (isSelected) TrackTextHighlight else StudioBorder,
                         shape = RoundedCornerShape(6.dp)
                     )
-                    .clickable { onTextClick(textOverlay) }
-                    .pointerInput(textOverlay.id) {
-                        detectDragGestures(
-                            onDragStart = { onTextClick(textOverlay) },
-                            onDrag = { change, dragAmount ->
-                                change.consume()
-                                dragOffsetPx += dragAmount.x
-                                val calculatedMs = (textOverlay.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(0L)
-                                onTextTimelineMove(textOverlay.id, calculatedMs)
-                            }
-                        )
-                    }
                     .padding(horizontal = 6.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -106,7 +94,20 @@ fun TextTrackView(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f, fill = false)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onTextClick(textOverlay) }
+                            .pointerInput(textOverlay.id) {
+                                detectDragGestures(
+                                    onDragStart = { onTextClick(textOverlay) },
+                                    onDrag = { change, dragAmount ->
+                                        change.consume()
+                                        dragOffsetPx += dragAmount.x
+                                        val calculatedMs = (textOverlay.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(0L)
+                                        onTextTimelineMove(textOverlay.id, calculatedMs)
+                                    }
+                                )
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Default.TextFields,

@@ -415,7 +415,8 @@ class EditorViewModel(
 
     fun deleteTextOverlay(overlayId: String) {
         val currentProject = _uiState.value.project
-        val updated = deleteTextOverlayUseCase(currentProject, overlayId)
+        val targetId = if (overlayId.isNotBlank()) overlayId else (_uiState.value.timelineState.selectedTextId ?: currentProject.textOverlays.lastOrNull()?.id ?: return)
+        val updated = deleteTextOverlayUseCase(currentProject, targetId)
         applyProjectState(updated)
         _uiState.update {
             it.copy(
@@ -554,7 +555,8 @@ class EditorViewModel(
 
     fun deleteAudioTrack(audioId: String) {
         val currentProject = _uiState.value.project
-        val updated = deleteAudioTrackUseCase(currentProject, audioId)
+        val targetId = if (audioId.isNotBlank()) audioId else (_uiState.value.timelineState.selectedAudioId ?: currentProject.audioClips.lastOrNull()?.id ?: return)
+        val updated = deleteAudioTrackUseCase(currentProject, targetId)
         applyProjectState(updated)
         _uiState.update {
             it.copy(

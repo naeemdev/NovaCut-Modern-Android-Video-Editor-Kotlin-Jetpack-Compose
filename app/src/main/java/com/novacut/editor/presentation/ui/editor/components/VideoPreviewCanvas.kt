@@ -355,24 +355,8 @@ private fun DraggableTextItem(
                 IntOffset(localOffsetX.roundToInt(), localOffsetY.roundToInt())
             }
             .scale(animScale)
-            .pointerInput(overlay.id) {
-                detectTapGestures(onTap = { onClick() })
-            }
-            .pointerInput(overlay.id) {
-                detectDragGestures(
-                    onDragStart = { onClick() },
-                    onDrag = { change, dragAmount ->
-                        change.consume()
-                        localOffsetX += dragAmount.x
-                        localOffsetY += dragAmount.y
-                        val newNormX = (0.5f + (localOffsetX / canvasWidthPx.coerceAtLeast(1f))).coerceIn(0.05f, 0.95f)
-                        val newNormY = (0.5f + (localOffsetY / canvasHeightPx.coerceAtLeast(1f))).coerceIn(0.05f, 0.95f)
-                        onPositionChange(newNormX, newNormY)
-                    }
-                )
-            }
     ) {
-        // Main text content bubble
+        // Main text content bubble with tap & drag gestures
         Box(
             modifier = Modifier
                 .padding(10.dp)
@@ -383,6 +367,22 @@ private fun DraggableTextItem(
                     color = labelBorderColor,
                     shape = RoundedCornerShape(8.dp)
                 )
+                .pointerInput(overlay.id) {
+                    detectTapGestures(onTap = { onClick() })
+                }
+                .pointerInput(overlay.id) {
+                    detectDragGestures(
+                        onDragStart = { onClick() },
+                        onDrag = { change, dragAmount ->
+                            change.consume()
+                            localOffsetX += dragAmount.x
+                            localOffsetY += dragAmount.y
+                            val newNormX = (0.5f + (localOffsetX / canvasWidthPx.coerceAtLeast(1f))).coerceIn(0.05f, 0.95f)
+                            val newNormY = (0.5f + (localOffsetY / canvasHeightPx.coerceAtLeast(1f))).coerceIn(0.05f, 0.95f)
+                            onPositionChange(newNormX, newNormY)
+                        }
+                    )
+                }
                 .padding(horizontal = 14.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {

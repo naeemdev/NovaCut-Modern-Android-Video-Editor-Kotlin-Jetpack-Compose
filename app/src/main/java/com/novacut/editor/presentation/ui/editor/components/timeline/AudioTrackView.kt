@@ -65,7 +65,10 @@ fun AudioTrackView(
     ) {
         audioClips.forEach { audio ->
             var dragOffsetPx by remember(audio.startTimelineMs) { mutableFloatStateOf(0f) }
-            val currentStartMs = (audio.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(0L)
+            val currentStartMs =
+                (audio.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(
+                    0L
+                )
             val startOffsetPx = (currentStartMs / 1000f) * pxPerSec
             val widthPx = (audio.durationMs / 1000f) * pxPerSec
             val startOffsetDp = with(density) { startOffsetPx.toDp() }
@@ -84,18 +87,6 @@ fun AudioTrackView(
                         color = if (isSelected) TrackAudioWaveform else StudioBorder,
                         shape = RoundedCornerShape(6.dp)
                     )
-                    .clickable { onAudioClick(audio.id) }
-                    .pointerInput(audio.id) {
-                        detectDragGestures(
-                            onDragStart = { onAudioClick(audio.id) },
-                            onDrag = { change, dragAmount ->
-                                change.consume()
-                                dragOffsetPx += dragAmount.x
-                                val calculatedMs = (audio.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(0L)
-                                onAudioMove(audio.id, calculatedMs)
-                            }
-                        )
-                    }
                     .padding(horizontal = 6.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -106,7 +97,23 @@ fun AudioTrackView(
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.weight(1f, fill = false)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onAudioClick(audio.id) }
+                            .pointerInput(audio.id) {
+                                detectDragGestures(
+                                    onDragStart = { onAudioClick(audio.id) },
+                                    onDrag = { change, dragAmount ->
+                                        change.consume()
+                                        dragOffsetPx += dragAmount.x
+                                        val calculatedMs =
+                                            (audio.startTimelineMs + (dragOffsetPx / pxPerSec * 1000f).toLong()).coerceAtLeast(
+                                                0L
+                                            )
+                                        onAudioMove(audio.id, calculatedMs)
+                                    }
+                                )
+                            }
                     ) {
                         Icon(
                             imageVector = Icons.Default.MusicNote,

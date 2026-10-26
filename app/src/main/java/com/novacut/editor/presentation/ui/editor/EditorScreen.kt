@@ -297,6 +297,9 @@ fun EditorContent(
                     )
                     EditorPanel.TEXT_EDIT -> {
                         val textItem = uiState.selectedTextOverlay
+                            ?: uiState.project.textOverlays.find { it.id == uiState.timelineState.selectedTextId }
+                            ?: uiState.project.textOverlays.lastOrNull()
+                        val textIdToDelete = textItem?.id ?: uiState.timelineState.selectedTextId ?: ""
                         TextSubToolbar(
                             textPreview = textItem?.text ?: "Text",
                             onEditClick = {
@@ -310,9 +313,7 @@ fun EditorContent(
                                 }
                             },
                             onDeleteClick = {
-                                if (textItem != null) {
-                                    onDeleteTextClick(textItem.id)
-                                }
+                                onDeleteTextClick(textIdToDelete)
                             },
                             onClose = onCloseSubToolbar
                         )
@@ -320,13 +321,12 @@ fun EditorContent(
                     EditorPanel.AUDIO_EDIT -> {
                         val audioItem = remember(uiState.project.audioClips, uiState.timelineState.selectedAudioId) {
                             uiState.project.audioClips.find { it.id == uiState.timelineState.selectedAudioId }
-                        }
+                        } ?: uiState.project.audioClips.lastOrNull()
+                        val audioIdToDelete = audioItem?.id ?: uiState.timelineState.selectedAudioId ?: ""
                         AudioSubToolbar(
                             audioTitle = audioItem?.title ?: "Audio",
                             onDeleteClick = {
-                                if (audioItem != null) {
-                                    onAudioDelete(audioItem.id)
-                                }
+                                onAudioDelete(audioIdToDelete)
                             },
                             onVolumeClick = {
                                 onVolumeClick()
